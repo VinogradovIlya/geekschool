@@ -25,53 +25,42 @@ for i in range(4):
     y = random.randint(50, WINDOW_H-50)
     enemies.add(hero.Hero('ghost.png', x, y, 50, 50, 5))
 
-player = hero.Hero('pacman_open.png', WINDOW_W/2-200, WINDOW_H/2, 50, 50, 0)
-barriers = pygame.sprite.Group()
-for x in range(0, WINDOW_W, 50):
-    barriers.add(sprite.GameSprite('wall.jpg', x, 0, 50, 50))
-    barriers.add(sprite.GameSprite('wall.jpg', x, WINDOW_H-50, 50, 50))
-for y in range(0, WINDOW_H, 50):
-    barriers.add(sprite.GameSprite('wall.jpg', 0, y, 50, 50))
-    barriers.add(sprite.GameSprite('wall.jpg', WINDOW_W-50, y, 50, 50))
-barriers.add(sprite.GameSprite('wall.jpg', WINDOW_H/2, WINDOW_H/2, 50, 50))
-barriers.add(sprite.GameSprite('wall.jpg', WINDOW_H/2-50, WINDOW_H/2, 50, 50))
-barriers.add(sprite.GameSprite('wall.jpg', WINDOW_H/2+50, WINDOW_H/2, 50, 50))
-barriers.add(sprite.GameSprite('wall.jpg', WINDOW_H/2, WINDOW_H/2-50, 50, 50))
-barriers.add(sprite.GameSprite('wall.jpg', WINDOW_H/2, WINDOW_H/2+50, 50, 50))
+player = pacman.Pacman('pacman_open.png', WINDOW_W/2, WINDOW_H/2, 50, 50, 10)
 
 running = True
-left = False
-right = False
-up = False
-down = False
+start = time.time()
+direction = [random.randint(0, 3) for _ in range(4)]
 while running:
+    now = time.time()
+    if now - start >= 5:
+        direction = [random.randint(0, 3) for _ in range(4)]
+        start = now
+    for e, num in zip(enemies, direction):
+        e.move(num)
+        e.outside(WINDOW_W, WINDOW_H)
     mw.fill(BACK)
     enemies.draw(mw)
-    barriers.draw(mw)
+    player.outside(WINDOW_W, WINDOW_H)
     player.reset(mw)
-    player.update(barriers, WINDOW_W, WINDOW_H)
 
     for e in pygame.event.get():
         if e.type == pygame.QUIT:
             running = False
-        elif e.type == pygame.KEYDOWN:
-            if e.key == pygame.K_a:
-                player.x_speed = -5
-            elif e.key == pygame.K_d:
-                player.x_speed = 5
-            elif e.key == pygame.K_w:
-                player.y_speed = -5
-            elif e.key == pygame.K_s:
-                player.y_speed = 5
-        elif e.type == pygame.KEYUP:
-            if e.key == pygame.K_a:
-                player.x_speed = 0
-            elif e.key == pygame.K_d:
-                player.x_speed = 0
-            elif e.key == pygame.K_w:
-                player.y_speed = 0
-            elif e.key == pygame.K_s:
-                player.y_speed = 0
+        player.move(e)
+    if player.up:
+        player.move_up()
+    if player.down:
+        player.move_down()
+    if player.left:
+        player.move_left()
+    if player.right:
+        player.move_right()
+    player.outside(WINDOW_W, WINDOW_H)
 
     pygame.display.update()
     clock.tick(40)
+
+""" 
+доделать движение монстриков
+доделать анимацию пакмана
+"""

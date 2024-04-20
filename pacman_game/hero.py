@@ -1,44 +1,69 @@
 import sprite
-import pygame
 
 
 class Hero(sprite.GameSprite):
     def __init__(self, player_image, x, y, w, h, player_speed):
         super().__init__(player_image, x, y, w, h)
-        self.y_speed = player_speed
-        self.x_speed = player_speed
+        self.speed = player_speed
+        self.left = False
+        self.right = False
+        self.up = False
+        self.down = False
 
     def move_up(self):
-        self.y_speed = 5
+        self.rect.y -= self.speed
 
     def move_down(self):
-        self.y_speed = -5
+        self.rect.y += self.speed
 
     def move_left(self):
-        self.x_speed = -5
+        self.rect.x -= self.speed
 
     def move_right(self):
-        self.x_speed = 5
+        self.rect.x += self.speed
 
-    def update(self, walls, w, h):
-        if self.rect.x <= w-80 and self.x_speed > 0 or self.rect.x >= 0 and self.x_speed < 0:
-            self.rect.x += self.x_speed
-        platforms_touched = pygame.sprite.spritecollide(self, walls, False)
-        if self.x_speed > 0:
-            for p in platforms_touched:
-                self.rect.right = min(self.rect.right, p.rect.left)
-        elif self.x_speed < 0:
-            for p in platforms_touched:
-                self.rect.left = max(self.rect.left, p.rect.right)
-        if self.rect.y <= h-80 and self.y_speed > 0 or self.rect.y >= 0 and self.y_speed < 0:
-            self.rect.y += self.y_speed
-        platforms_touched = pygame.sprite.spritecollide(self, walls, False)
-        if self.y_speed > 0:
-            for p in platforms_touched:
-                self.y_speed = 0
-                if p.rect.top < self.rect.bottom:
-                    self.rect.bottom = p.rect.top
-        elif self.y_speed < 0:
-            for p in platforms_touched:
-                self.y_speed = 0
-                self.rect.top = max(self.rect.top, p.rect.bottom)
+    def outside(self, w, h):
+        if self.rect.top < 0:
+            self.rect.top = 0
+        elif self.rect.bottom > h:
+            self.rect.bottom = h
+        elif self.rect.right > w:
+            self.rect.right = w
+        elif self.rect.left < 0:
+            self.rect.left = 0
+
+    def is_outside(self):
+        outside = False
+        if not (self.rect.top or self.rect.bottom or self.rect.left or self.rect.right):
+            outside = True
+        return outside
+
+    def move(self, number):
+        if number == 0:
+            self.left = True
+            self.right = False
+            self.up = False
+            self.down = False
+        if number == 1:
+            self.left = False
+            self.right = True
+            self.up = False
+            self.down = False
+        if number == 2:
+            self.left = False
+            self.right = False
+            self.up = True
+            self.down = False
+        if number == 0:
+            self.down = True
+            self.left = False
+            self.right = False
+            self.up = False
+        if self.left:
+            self.move_left()
+        if self.right:
+            self.move_right()
+        if self.up:
+            self.move_up()
+        if self.down:
+            self.move_down()

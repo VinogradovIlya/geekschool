@@ -1,6 +1,5 @@
 import pygame
 import hero
-import sprite
 import pacman
 import random
 import time
@@ -29,14 +28,16 @@ player = pacman.Pacman('pacman_open.png', WINDOW_W/2, WINDOW_H/2, 50, 50, 10)
 
 running = True
 start = time.time()
-direction = [random.randint(0, 3) for _ in range(4)]
+for e in enemies:
+    e.direct()
 while running:
     now = time.time()
     if now - start >= 5:
-        direction = [random.randint(0, 3) for _ in range(4)]
+        for e in enemies:
+            e.direct()
         start = now
-    for e, num in zip(enemies, direction):
-        e.move(num)
+    for e in enemies:
+        e.move(e.direction)
         e.outside(WINDOW_W, WINDOW_H)
     mw.fill(BACK)
     enemies.draw(mw)
@@ -61,6 +62,6 @@ while running:
     clock.tick(40)
 
 """ 
-доделать движение монстриков
+сделать поедание монстриков пакманом
 доделать анимацию пакмана
 """

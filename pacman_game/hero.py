@@ -1,4 +1,5 @@
 import sprite
+import random
 
 
 class Hero(sprite.GameSprite):
@@ -9,6 +10,7 @@ class Hero(sprite.GameSprite):
         self.right = False
         self.up = False
         self.down = False
+        self.direction = None
 
     def move_up(self):
         self.rect.y -= self.speed
@@ -25,18 +27,23 @@ class Hero(sprite.GameSprite):
     def outside(self, w, h):
         if self.rect.top < 0:
             self.rect.top = 0
+            self.direction = 3
         elif self.rect.bottom > h:
             self.rect.bottom = h
+            self.direction = 2
         elif self.rect.right > w:
             self.rect.right = w
+            self.direction = 0
         elif self.rect.left < 0:
             self.rect.left = 0
+            self.direction = 1
 
-    def is_outside(self):
-        outside = False
-        if not (self.rect.top or self.rect.bottom or self.rect.left or self.rect.right):
-            outside = True
-        return outside
+    def direct(self):
+        direct = random.randint(0, 3)
+        if self.direction == direct:
+            while self.direction == direct:
+                direct = random.randint(0, 3)
+        self.direction = direct
 
     def move(self, number):
         if number == 0:
@@ -54,7 +61,7 @@ class Hero(sprite.GameSprite):
             self.right = False
             self.up = True
             self.down = False
-        if number == 0:
+        if number == 3:
             self.down = True
             self.left = False
             self.right = False

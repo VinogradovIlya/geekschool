@@ -42,6 +42,7 @@ while running:
     mw.fill(BACK)
     enemies.draw(mw)
     player.outside(WINDOW_W, WINDOW_H)
+    player.animation()
     player.reset(mw)
 
     for e in pygame.event.get():
@@ -67,7 +68,3 @@ while running:
 
     pygame.display.update()
     clock.tick(40)
-
-""" 
-доделать анимацию пакмана
-"""

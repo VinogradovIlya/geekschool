@@ -10,7 +10,7 @@ class Hero(sprite.GameSprite):
         self.right = False
         self.up = False
         self.down = False
-        self.direction = None
+        self.direction = random.randint(0,3)
 
     def move_up(self):
         self.rect.y -= self.speed

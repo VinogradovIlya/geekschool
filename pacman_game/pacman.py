@@ -24,7 +24,7 @@ class Pacman(hero.Hero):
                 self.up = False
             elif e.key == pygame.K_DOWN:
                 self.down = False
-    
+
     @override
     def outside(self, w, h):
         if self.rect.top < 0:
@@ -35,3 +35,6 @@ class Pacman(hero.Hero):
             self.rect.right = w
         elif self.rect.left < 0:
             self.rect.left = 0
+
+    def animation(self):
+        ...

@@ -24,7 +24,7 @@ for i in range(4):
     y = random.randint(50, WINDOW_H-50)
     enemies.add(hero.Hero('ghost.png', x, y, 50, 50, 5))
 
-player = pacman.Pacman('pacman_open.png', WINDOW_W/2, WINDOW_H/2, 50, 50, 10)
+player = pacman.Pacman('pacman3.png', WINDOW_W/2, WINDOW_H/2, 50, 50, 10)
 
 running = True
 start = time.time()
@@ -58,10 +58,16 @@ while running:
         player.move_right()
     player.outside(WINDOW_W, WINDOW_H)
 
+    pygame.sprite.spritecollide(player, enemies, True)
+    if not len(enemies):
+        for i in range(4):
+            x = random.randint(50, WINDOW_W-50)
+            y = random.randint(50, WINDOW_H-50)
+            enemies.add(hero.Hero('ghost.png', x, y, 50, 50, 5))
+
     pygame.display.update()
     clock.tick(40)
 
 """ 
-сделать поедание монстриков пакманом
 доделать анимацию пакмана
 """
